@@ -58,4 +58,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push Docker image to Docker Hub
-        run: docker push your-dockerhub-username/crud-vulnerable:${{ github.sha }}
+        run: docker push mohamed1780/crud-vulnerable:${{ github.sha }}
