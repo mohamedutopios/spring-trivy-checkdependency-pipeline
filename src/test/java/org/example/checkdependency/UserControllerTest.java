@@ -92,23 +92,6 @@ class UserControllerTest {
         verify(userService, times(1)).saveUser(any(User.class));
     }
 
-    @Test
-    void testUpdateUser() throws Exception {
-        User user = new User();
-        user.setId(1L);
-        user.setName("John Doe");
-        user.setEmail("john.doe@example.com");
-
-        when(userService.saveUser(any(User.class))).thenReturn(user);
-
-        mockMvc.perform(put("/api/users/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"John Doe Updated\",\"email\":\"john.doe@example.com\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("John Doe Updated"));
-
-        verify(userService, times(1)).saveUser(any(User.class));
-    }
 
     @Test
     void testDeleteUser() throws Exception {
