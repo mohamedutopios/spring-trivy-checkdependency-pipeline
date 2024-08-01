@@ -1,8 +1,5 @@
-# Utiliser une image de base officielle Java 17
-FROM openjdk:17-jdk-slim
-
-# Ajouter un label pour identifier la maintenabilité de l'image
-LABEL maintainer="your-email@example.com"
+# Utiliser une image de base Maven avec JDK 17
+FROM maven:3.8.7-openjdk-17 AS build
 
 # Définir le répertoire de travail à l'intérieur du conteneur
 WORKDIR /app
@@ -17,8 +14,17 @@ COPY src ./src
 # Construire le projet
 RUN mvn clean package -DskipTests
 
+# Utiliser une image de base plus légère pour exécuter l'application
+FROM openjdk:17-jdk-slim
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier le jar de l'étape précédente
+COPY --from=build /app/target/check-dependency-0.0.1-SNAPSHOT.jar /app/check-dependency-0.0.1-SNAPSHOT.jar
+
 # Exposer le port de l'application
-EXPOSE 8080
+EXPOSE 8084
 
 # Définir le point d'entrée de l'application
-ENTRYPOINT ["java","-jar","target/crud-vulnerable-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/check-dependency-0.0.1-SNAPSHOT.jar"]
